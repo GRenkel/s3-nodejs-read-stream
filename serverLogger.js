@@ -13,10 +13,9 @@ const fileExists = async (filePath) => {
 }
 
 export async function serverLogger(message, logFileName) {
-
     const logTimeStamp = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
 
-    const log = logTimeStamp + '\t' + message + '\n'
+    const log = process.pid + '\t' + logTimeStamp + '\t' + message + '\n'
 
     try {
         if (!(await fileExists(LOG_PATH))) {
