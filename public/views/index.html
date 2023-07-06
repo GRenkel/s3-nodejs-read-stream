@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Nosferatu - 1922</title>
+        <style>
+            /* Styles for the page */
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: Arial, sans-serif;
+            }
+
+            /* Styles for the header */
+            header {
+                background: black;
+                color: white;
+                padding: 20px;
+                text-align: center;
+            }
+
+            /* Styles for the main content */
+            .main-content {
+                padding: 25px;
+                text-align: center;
+            }
+
+            .video-container {
+                box-shadow: 0px 0px 10px rgb(253, 253, 253);
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: #ffffff;
+            }
+            video {
+                max-height: 600px;
+            }
+            /* Styles for the sections */
+            section {
+                height: 700px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+            }
+
+            section:nth-of-type(odd) {
+                background: #f5f5f5;
+            }
+
+            section:nth-of-type(even) {
+                background: #ddd;
+            }
+
+            /* Styles for the title of each section */
+            h2 {
+                font-size: 46px;
+                margin-bottom: 20px;
+            }
+
+            p {
+                font-size: 22px;
+            }
+            /* Styles for the parallax elements */
+            .parallax {
+                background-attachment: fixed;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+                height: 900px;
+                position: relative;
+            }
+
+            .parallax-content {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                color: white;
+                text-align: center;
+            }
+            /* Styles for the footer */
+            footer {
+                background: black;
+                color: white;
+                padding: 20px;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>Nosferatu - 1922 - Real Time Video Stream</h1>
+        </header>
+
+        <div class="parallax" style="background-image: url('nosferatu_castle_bw.jpg');">
+            <div class="parallax-content">
+                <h2>Welcome to the dark world of Nosferatu</h2>
+                <p>A masterpiece of German expressionist cinema</p>
+            </div>
+        </div>
+
+        <section>
+            <div class="main-content">
+                <h2>Synopsis</h2>
+                <p>"Nosferatu" is a 1922 vampire film based on Bram Stoker's "Dracula." Count Orlok, a vampire, moves to a small town, spreading terror and illness. Thomas Hutter, a real estate agent, discovers the count's true nature and tries to save his wife, Ellen. As fear grips the town, they seek ways to protect themselves. Ellen bravely confronts Count Orlok to stop his reign of terror. The film's atmospheric visuals and expressionistic style set the stage for vampire mythology. "Nosferatu" remains a timeless horror masterpiece, influencing the genre for generations.</p>
+            </div>
+        </section>
+
+        <div class="parallax" style="background-image: url('nosferatu_bg_1_bw.jpg');">
+            <div class="parallax-content">
+                <div class="video-container" style="background-image: url('nosferatu_bg_1_bw.jpg');">
+                  <video id="video" controls autoplay>
+                    <source src="/test-video.mp4" type="video/mp4">
+                    Sorry, it looks like your computer can't play it.
+                  </video>
+                </div>
+              </div>
+        </div>
+
+        <footer>
+            <p>© 2023 Renkel</p>
+        </footer>
+    </body>
+</html>
