@@ -1,3 +1,4 @@
+import EventEmitter from 'node:events';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {format} from 'node:util';
@@ -26,3 +27,9 @@ export async function serverLogger(message, logFileName) {
         console.log(error)
     }
 }
+
+export const serverLogEmitter = new EventEmitter();
+
+serverLogEmitter.on("log", (message, logFileName) =>
+  serverLogger(message, logFileName)
+);

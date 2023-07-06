@@ -1,41 +1,29 @@
 import http from "http";
-import fs from "fs";
-import { pipeline } from "stream/promises";
-import EventEmitter from "events";
-import { serverLogger } from "./serverLogger.js";
-import { getRequestContentType } from "./serverHelper.js";
 import path from "path";
-const fsPromises = fs.promises;
-import S3Stream from "./S3Stream.js";
-import { S3 } from "@aws-sdk/client-s3";
+import 'dotenv/config'
+import fsPromises from "fs/promises";
+import { pipeline } from "stream/promises";
+import S3Client from "./services/S3Client.js";
+import { serverLogEmitter } from "./serverLogger.js";
+import { getRequestContentType } from "./serverHelper.js";
 
-const CHUNK_SIZE = 10e6;
-
-const s3Options = {
-  region: "us-east-1",
-  credentials: {
-    accessKeyId: "*",
-    secretAccessKey: "*",
-  },
-};
-
-const s3Client = new S3(s3Options);
+const CHUNK_SIZE = 3e6;
 const API_PORT = process.env.PORT || 3001;
 
 async function serveVideoStream(request, response) {
+
   try {
     const controller = new AbortController();
 
-    const Bucket = "nodejs-video-stream";
-    const Key = "nosferatu.mp4";
+    const Bucket = process.env.BUCKET;
+    const Key = request.url.replace('/', '')
 
     const objectParams = {
       Key,
       Bucket,
     };
 
-    const s3Stream = new S3Stream(s3Client, objectParams);
-    const videoSize = await s3Stream.getObjectFileSize();
+    const videoSize = await S3Client.getObjectFileSize(objectParams);
 
     const requestedRange = request.headers.range || '';
     const start = Number(requestedRange.replace(/\D/g, ""));
@@ -54,7 +42,7 @@ async function serveVideoStream(request, response) {
     response.setHeader("Content-Length", contentLength);
 
     await pipeline(
-      s3Stream.initiateFileStream(start, end), 
+      S3Client.initiateFileStream(objectParams, start, end), 
       response, 
       { signal: controller.signal }
     );
@@ -110,8 +98,4 @@ http
   .createServer(requestHandler)
   .listen(API_PORT, () => console.log(`server listening o port ${API_PORT}`));
 
-const serverLogEmitter = new EventEmitter();
 
-serverLogEmitter.on("log", (message, logFileName) =>
-  serverLogger(message, logFileName)
-);
