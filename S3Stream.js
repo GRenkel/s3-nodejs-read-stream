@@ -12,7 +12,8 @@ class S3Stream {
         const { ContentLength } = await this.client.headObject(this.objectParams);
         return ContentLength
     }
-    async * generateFileStream(start, end) {
+
+    async * initiateFileStream(start, end) {
         const streamRange = `bytes=${start}-${end}`
 
         const {Body: chunks} = await this.client.getObject({

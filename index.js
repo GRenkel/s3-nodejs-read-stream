@@ -11,7 +11,6 @@ import { S3 } from "@aws-sdk/client-s3";
 
 const CHUNK_SIZE = 10e6;
 
-
 const s3Options = {
   region: "us-east-1",
   credentials: {
@@ -22,11 +21,6 @@ const s3Options = {
 
 const s3Client = new S3(s3Options);
 const API_PORT = process.env.PORT || 3001;
-
-const serverLogEmitter = new EventEmitter();
-serverLogEmitter.on("log", (message, logFileName) =>
-  serverLogger(message, logFileName)
-);
 
 async function serveVideoStream(request, response) {
   try {
@@ -39,15 +33,15 @@ async function serveVideoStream(request, response) {
       Key,
       Bucket,
     };
-    
-    const s3Stream = new S3Stream(s3Client, objectParams);
-    const videoSize = await s3Stream.getObjectFileSize()
 
-    const requestedRange = request.headers.range;
+    const s3Stream = new S3Stream(s3Client, objectParams);
+    const videoSize = await s3Stream.getObjectFileSize();
+
+    const requestedRange = request.headers.range || '';
     const start = Number(requestedRange.replace(/\D/g, ""));
     const end = Math.min(start + CHUNK_SIZE, videoSize - 1);
     const contentLength = end - start + 1;
-    
+
     serverLogEmitter.emit(
       "log",
       `\nStarting byte: ${start}\nEnding byte: ${end}\nContent length:${contentLength}\n`,
@@ -59,10 +53,11 @@ async function serveVideoStream(request, response) {
     response.setHeader("Content-Range", `bytes ${start}-${end}/${videoSize}`);
     response.setHeader("Content-Length", contentLength);
 
-    await pipeline(s3Stream.generateFileStream(start, end), response, {
-      signal: controller.signal,
-    });
-
+    await pipeline(
+      s3Stream.initiateFileStream(start, end), 
+      response, 
+      { signal: controller.signal }
+    );
   } catch (error) {
     serverLogEmitter.emit(
       "log",
@@ -74,8 +69,7 @@ async function serveVideoStream(request, response) {
 
 const serveMainPage = async (request, response) => {
   try {
-    
-    let requestedFile = path.basename(request.url) || "index.html"
+    let requestedFile = path.basename(request.url) || "index.html";
 
     const rawData = await fsPromises.readFile(
       path.join("./", "public", "views", requestedFile)
@@ -111,6 +105,13 @@ async function requestHandler(request, response) {
     );
   }
 }
+
 http
   .createServer(requestHandler)
   .listen(API_PORT, () => console.log(`server listening o port ${API_PORT}`));
+
+const serverLogEmitter = new EventEmitter();
+
+serverLogEmitter.on("log", (message, logFileName) =>
+  serverLogger(message, logFileName)
+);

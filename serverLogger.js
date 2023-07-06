@@ -3,7 +3,7 @@ import path from 'node:path';
 import {format} from 'node:util';
 const LOG_PATH = './logs'
 
-const fileExists = async (filePath) => {
+const logFileExists = async (filePath) => {
     try {
         await fs.access(filePath)
         return true
@@ -18,7 +18,7 @@ export async function serverLogger(message, logFileName) {
     const log = process.pid + '\t' + logTimeStamp + '\t' + message + '\n'
 
     try {
-        if (!(await fileExists(LOG_PATH))) {
+        if (!(await logFileExists(LOG_PATH))) {
             await fs.mkdir(LOG_PATH, {recursive: true})
         }
         await fs.appendFile(path.join(LOG_PATH, logFileName), log)
