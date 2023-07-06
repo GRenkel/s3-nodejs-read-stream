@@ -14,8 +14,8 @@ const CHUNK_SIZE = 10e6;
 const s3Options = {
   region: "us-east-1",
   credentials: {
-    accessKeyId: "AKIASAPZCURNPJOGDXVB",
-    secretAccessKey: "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",
+    accessKeyId: "*",
+    secretAccessKey: "*",
   },
 };
 
