@@ -15,15 +15,9 @@ async function serveVideoStream(request, response) {
   try {
     const controller = new AbortController();
 
-    const Bucket = process.env.BUCKET;
-    const Key = request.url.replace('/', '')
+    const videoKey = request.url.replace('/', '')
 
-    const objectParams = {
-      Key,
-      Bucket,
-    };
-
-    const videoSize = await S3Client.getObjectFileSize(objectParams);
+    const videoSize = await S3Client.getObjectFileSize(videoKey);
 
     const requestedRange = request.headers.range || '';
     const start = Number(requestedRange.replace(/\D/g, ""));
@@ -42,7 +36,7 @@ async function serveVideoStream(request, response) {
     response.setHeader("Content-Length", contentLength);
 
     await pipeline(
-      S3Client.initiateFileStream(objectParams, start, end), 
+      S3Client.initiateObjectStream(videoKey, start, end), 
       response, 
       { signal: controller.signal }
     );

@@ -10,17 +10,22 @@ const s3Options = {
 
 export default {
     _client: new S3(s3Options),
-    
-    async getObjectFileSize(objectParams) {
-        const {ContentLength} = await this._client.headObject(objectParams);
+    _bucket: process.env.BUCKET,
+
+    async getObjectFileSize(Key) {
+        const {ContentLength} = await this._client.headObject({
+            Key,
+            Bucket: this._bucket,
+        });
         return ContentLength
     },
 
-    async * initiateFileStream(objectParams, start, end) {
+    async * initiateObjectStream(Key, start, end) {
         const streamRange = `bytes=${start}-${end}`
 
         const {Body: chunks} = await this._client.getObject({
-            ...objectParams,
+            Key,
+            Bucket: this._bucket,
             Range: streamRange
         })
 
