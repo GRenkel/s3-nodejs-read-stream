@@ -20,7 +20,7 @@ To indicate the total size of the file content being sent by the server in fragm
 
 The figure below illustrates the HTTP headers used in communication between a client and a server for sending a video in equal parts of 1024 bytes in size.
 
-![S3_Video_Stream.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/a86bd8ec-a88d-49ee-be3b-b726a9f34a1e/S3_Video_Stream.png)
+![S3_Video_Stream.png](https://github.com/GRenkel/s3-nodejs-read-stream/blob/a270d2acf855e1bcfa4bd543bc12ecd8c68f34e3/git-readme/S3_Video_Stream.png)
 
 ## ****Benefits of Using Streams for File Download****
 
@@ -39,7 +39,7 @@ Contrary to the traditional method of loading an entire file into memory, stream
 
 Below is a simplified illustration of the difference between conventional file reading and reading through a Readable Stream.
 
-![StreamNode.drawio.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/5bc0e5bd-ad51-4257-b37b-bc9abff80348/StreamNode.drawio.png)
+![StreamNode.drawio.png](https://github.com/GRenkel/s3-nodejs-read-stream/blob/a270d2acf855e1bcfa4bd543bc12ecd8c68f34e3/git-readme/StreamNode.drawio.png)
 
 In general, the following benefits can be pointed out when using Streams in Node.js for large-scale data processing:
 
@@ -108,7 +108,7 @@ This implementation utilizes the streaming features provided by the **`@aws-sdk/
 
 Now that we can partially obtain objects from an S3 bucket and generate a data stream, the final step is to enable an HTTP server to serve the video in real-time. For the proposed solution, the native HTTP module was used to instantiate the server, and the **`S3Client`** object refers to the module presented in the previous item.
 
-For the sake of simplicity, the implementation related to server initialization will not be discussed here since its functionality is limited to serving a static HTML page with a video player and serving the video itself through the **`serveVideoStream`** function. If you have questions about how to implement this part, the code can be found [here](LINK GITHUB).
+For the sake of simplicity, the implementation related to server initialization will not be discussed here since its functionality is limited to serving a static HTML page with a video player and serving the video itself through the **`serveVideoStream`** function.
 
 Below is the proposed function to handle the real-time video transmission.
 
